@@ -258,18 +258,6 @@ LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator= (const LinAlg::Matrix<Othe
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator- () const
-{
-    LinAlg::Matrix<Type> temp(*this);
-
-    for(unsigned i = 0; i < temp.rows; i++)
-        for(unsigned j = 0; j < temp.columns; j++)
-            temp.mat[i][j] *= -1;
-
-    return temp;
-}
-
-template<typename Type>
 LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator+= (const Type& rhs /*scalar*/)
 {
     for(unsigned i = 0; i < this->rows; i++)
@@ -375,6 +363,30 @@ LinAlg::Matrix<Type> LinAlg::Eye (unsigned dimension)
             }
 
     return Ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::operator- (LinAlg::Matrix<Type>& mat)
+{
+    LinAlg::Matrix<Type> temp(mat);
+
+    for(unsigned i = 1; i <= temp.getNumberOfRows(); i++)
+        for(unsigned j = 1; j <= temp.getNumberOfColumns(); j++)
+            temp(i, j) *= -1;
+
+    return temp;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::operator~ (LinAlg::Matrix<Type>& mat)
+{
+    LinAlg::Matrix<Type> temp(mat.getNumberOfColumns(), mat.getNumberOfRows());
+
+    for(unsigned i = 1; i <= mat.getNumberOfRows(); i++)
+        for(unsigned j = 1; j <= mat.getNumberOfColumns(); j++)
+            temp(j, i) = mat(i, j);
+
+    return temp;
 }
 
 template<typename Type>
