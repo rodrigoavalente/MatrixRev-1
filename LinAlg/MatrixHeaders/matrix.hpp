@@ -488,6 +488,26 @@ LinAlg::Matrix<Type> LinAlg::Cofactor(LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Inverse(LinAlg::Matrix<Type>& mat)
+{
+    Type determinant = LinAlg::Determinant(mat);
+    unsigned rows = mat.getNumberOfRows(), columns = mat.getNumberOfColumns();
+    LinAlg::Matrix<Type> ret(rows, columns);
+
+    if(rows != columns)
+        std::cout << "Operacao disponivel somente para matrizes quadradas.";
+    else if( determinant == 0)
+        std::cout << "Impossivel inverter, determinante igual a 0.";
+    else
+    {
+        ret = LinAlg::Cofactor(mat);
+        ret = (~ret)/LinAlg::Determinant(mat);
+    }
+
+    return ret;
+}
+
+template<typename Type>
 void LinAlg::Print(const Matrix<Type>& Mat)
 {
   std::cout << std::endl;
