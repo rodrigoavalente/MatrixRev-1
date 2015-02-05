@@ -386,7 +386,10 @@ Type LinAlg::Determinant(LinAlg::Matrix<Type>& mat)
 
 
     if(rows != columns)
+    {
         determinant = 0;
+        std::cout << "Operacao disponivel somente para matrizes quadradas.";
+    }
     else if(rows == 1)
         determinant = mat(1, 1);
     else if(rows == 2)
@@ -423,9 +426,53 @@ Type LinAlg::Determinant(LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Cofactor(LinAlg::Matrix<Type>& Mat)
+LinAlg::Matrix<Type> LinAlg::Cofactor(LinAlg::Matrix<Type>& mat)
 {
+	unsigned rows = mat.getNumberOfRows(), columns = mat.getNumberOfColumns(), aux1, aux2;
+	LinAlg::Matrix<Type> temp(rows - 1, columns - 1), ret(rows, columns);
 
+	if(rows != columns)
+    {
+        LinAlg::Zeros(ret);
+        std::cout << "Operacao disponivel somente para matrizes quadradas.";
+    }
+    else if(rows == 2)
+    {
+        ret(1, 1) = mat(2, 2);
+        ret(2, 2) = mat(1, 1);
+        ret(1, 2) = -mat(2, 1);
+        ret(2, 1) = -mat(1, 2);
+    }
+    else
+    {
+        for(unsigned j = 1; j <= rows; j++)
+            for(unsigned i = 1; i <= rows; i++)
+            {
+                aux1 = 1;
+
+                for(unsigned m = 1; m <= rows; m++)
+                {
+                    if(!(m == i))
+                    {
+                        aux2 = 1;
+
+                        for(unsigned n = 1; n <= rows; n++)
+                        {
+                            if(!(n == j))
+                            {
+                                temp(aux1, aux2) = mat(m, n);
+                                aux2++;
+                            }
+                        }
+                        aux1++;
+                    }
+                }
+
+                ret(i, j) = pow(-1, i + j)*LinAlg::Determinant(temp);
+            }
+    }
+
+    return ret;
 }
 
 template<typename Type>

@@ -108,7 +108,7 @@ namespace LinAlg {
     Type Determinant (LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
-    LinAlg::Matrix<Type> Cofactor(LinAlg::Matrix<Type>& Mat);
+    LinAlg::Matrix<Type> Cofactor(LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
     void Print (const LinAlg::Matrix<Type>& Mat);
