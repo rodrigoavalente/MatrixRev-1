@@ -155,6 +155,6 @@ namespace LinAlg {
     void Print (const LinAlg::Matrix<Type>& mat);
 };
 
-#include "MatrixHeaders/matrix.hpp"
+#include "src/matrix.hpp"
 
 #endif // MATRIX_H
