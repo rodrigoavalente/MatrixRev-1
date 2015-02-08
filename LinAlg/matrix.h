@@ -152,7 +152,7 @@ namespace LinAlg {
     LinAlg::Matrix<Type> Inverse(const LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
-    void Print (const LinAlg::Matrix<Type>& Mat);
+    void Print (const LinAlg::Matrix<Type>& mat);
 };
 
 #include "MatrixHeaders/matrix.hpp"

@@ -641,7 +641,7 @@ LinAlg::Matrix<Type> LinAlg::Inverse(const LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-void LinAlg::Print(const Matrix<Type>& Mat)
+void LinAlg::Print(const Matrix<Type>& mat)
 {
   std::cout << std::endl;
 
