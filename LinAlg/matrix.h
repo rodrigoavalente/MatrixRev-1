@@ -137,6 +137,12 @@ namespace LinAlg {
     LinAlg::Matrix<Type> Eye (unsigned dimension);
 
     template<typename Type>
+    void Ones (LinAlg::Matrix<Type> & mat);
+
+    template<typename Type>
+    LinAlg::Matrix<Type> Ones (unsigned rows, unsigned columns);
+
+    template<typename Type>
     Type Determinant (const LinAlg::Matrix<Type>& mat);
 
     template<typename Type>

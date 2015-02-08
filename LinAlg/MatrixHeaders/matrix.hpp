@@ -401,40 +401,6 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator|| (LinAlg::Matrix<RightType>
 }
 
 template<typename Type>
-void LinAlg::Zeros(Matrix<Type>& Mat)
-{
-    for(unsigned i = 1; i <= Mat.getNumberOfRows(); i++)
-        for(unsigned j = 1; j <= Mat.getNumberOfColumns(); j++)
-            Mat(i, j) = 0;
-}
-
-template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Zeros (unsigned rows, unsigned columns)
-{
-
-    LinAlg::Matrix<Type> Ret(rows, columns);
-
-    return Ret;
-}
-
-template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Eye (unsigned dimension)
-{
-    LinAlg::Matrix<Type> Ret(dimension, dimension);
-
-    for(unsigned i = 1; i <= dimension; i++)
-        for(unsigned j = 1; j <= dimension; j++)
-            {
-                if( i == j)
-                    Ret(i, j) = 1;
-                else
-                    Ret(i, j) = 0;
-            }
-
-    return Ret;
-}
-
-template<typename Type>
 LinAlg::Matrix<Type> LinAlg::operator- (LinAlg::Matrix<Type>& mat)
 {
     LinAlg::Matrix<Type> temp(mat);
@@ -502,6 +468,58 @@ bool LinAlg::operator== (const LinAlg::Matrix<Type>& lhs, const LinAlg::Matrix<T
         ret = false;
 
     return ret;
+}
+
+template<typename Type>
+void LinAlg::Zeros(Matrix<Type>& Mat)
+{
+    for(unsigned i = 1; i <= Mat.getNumberOfRows(); i++)
+        for(unsigned j = 1; j <= Mat.getNumberOfColumns(); j++)
+            Mat(i, j) = 0;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Zeros (unsigned rows, unsigned columns)
+{
+
+    LinAlg::Matrix<Type> Ret(rows, columns);
+
+    return Ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Eye (unsigned dimension)
+{
+    LinAlg::Matrix<Type> Ret(dimension, dimension);
+
+    for(unsigned i = 1; i <= dimension; i++)
+        for(unsigned j = 1; j <= dimension; j++)
+            {
+                if( i == j)
+                    Ret(i, j) = 1;
+                else
+                    Ret(i, j) = 0;
+            }
+
+    return Ret;
+}
+
+template<typename Type>
+void LinAlg::Ones(LinAlg::Matrix<Type>& mat)
+{
+    for(unsigned i = 1; i <= mat.getNumberOfRows(); i++)
+        for(unsigned j = 1; j <= mat.getNumberOfColumns(); j++)
+            mat(i, j) = 1;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Ones(unsigned rows, unsigned columns)
+{
+    LinAlg::Matrix<Type> temp(rows, columns);
+
+    LinAlg::Ones(temp);
+
+    return temp;
 }
 
 template<typename Type>
