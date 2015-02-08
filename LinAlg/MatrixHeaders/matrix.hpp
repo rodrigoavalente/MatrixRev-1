@@ -343,11 +343,37 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>&
             for(unsigned j = 0; j < this->columns; j++)
                 ret.mat[i][j] = this->mat[i][j];
 
-
-
         for(unsigned i = 1; i <= rhs.getNumberOfRows(); i++)
             for(unsigned j = 1; j <= rhs.getNumberOfColumns(); j++)
                 ret(i, aux + j) = rhs(i, j);
+    }
+
+    return ret;
+}
+
+template<typename Type> template<typename RightType>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator|| (LinAlg::Matrix<RightType>& rhs)
+{
+    LinAlg::Matrix<Type>ret;
+
+    if(this->mat == NULL)
+        ret = rhs;
+    else
+    {
+        unsigned aux = this->rows;
+
+        if(this->columns < rhs.getNumberOfColumns())
+            ret.Init(this->rows + rhs.getNumberOfRows(), rhs.getNumberOfColumns());
+        else
+            ret.Init(this->rows + rhs.getNumberOfRows(), this->columns);
+
+        for(unsigned i = 0; i < this->rows; i++)
+            for(unsigned j = 0; j < this->columns; j++)
+                ret.mat[i][j] = this->mat[i][j];
+
+        for(unsigned i = 1; i <= rhs.getNumberOfRows(); i++)
+            for(unsigned j = 1; j <= rhs.getNumberOfColumns(); j++)
+                ret(i + aux, j) = rhs(i, j);
     }
 
     return ret;
