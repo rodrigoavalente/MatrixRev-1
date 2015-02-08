@@ -119,6 +119,13 @@ namespace LinAlg {
 
     template<typename Type>
     std::ostream& operator<< (std::ostream& output, const LinAlg::Matrix<Type>& mat);
+    template<typename Type>
+    std::istream& operator>> (std::istream& input, LinAlg::Matrix<Type>& mat);
+
+    template<typename Type>
+    bool operator== (const LinAlg::Matrix<Type>& lhs, const LinAlg::Matrix<Type>& rhs);
+    template<typename Type>
+    bool operator!= (const LinAlg::Matrix<Type>& lhs, const LinAlg::Matrix<Type>& rhs) {return !(lhs == rhs);}
 
     template<typename Type>
     void Zeros (LinAlg::Matrix<Type>& Mat);
