@@ -110,7 +110,7 @@ namespace LinAlg {
     LinAlg::Matrix<Type> operator~ (LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
-    LinAlg::Matrix<Type> operator^ (LinAlg::Matrix<Type> lhs, double exp) {return lsh ^= exp;}
+    LinAlg::Matrix<Type> operator^ (LinAlg::Matrix<Type> lhs, double exp) {return lhs ^= exp;}
 
     template<typename Type>
     void Zeros (LinAlg::Matrix<Type>& Mat);
