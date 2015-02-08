@@ -19,9 +19,9 @@ Type LinAlg::Trace (const LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-void LinAlg::QR_Factoration (const LinAlg::Matrix<Type>& input_matrix,
-                             LinAlg::Matrix<Type>& output_Q_matrix,
-                             LinAlg::Matrix<Type>& output_R_matrix)
+void LinAlg::QR_Factorization (const LinAlg::Matrix<Type>& input_matrix,
+                               LinAlg::Matrix<Type>& output_Q_matrix,
+                               LinAlg::Matrix<Type>& output_R_matrix)
 {
 
     //Constants calculated and needed for the QR algorithm.
@@ -60,5 +60,14 @@ void LinAlg::QR_Factoration (const LinAlg::Matrix<Type>& input_matrix,
             output_Q_matrix *= temp;
         }
 
+}
+
+//Simplified away to call QR_Factorization.
+template<typename Type>
+void LinAlg::QR (const LinAlg::Matrix<Type>& input_matrix,
+                 LinAlg::Matrix<Type>& output_Q_matrix,
+                 LinAlg::Matrix<Type>& output_R_matrix)
+{
+    LinAlg::QR_Factorization(input_matrix, output_Q_matrix, output_R_matrix);
 }
 
