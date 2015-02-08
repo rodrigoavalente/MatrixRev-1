@@ -328,6 +328,15 @@ LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator/= (const LinAlg::Matrix<Rig
     return *this *= LinAlg::Inverse<RightType>(rhs);
 }
 
+template<typename Type>
+LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator^= (double exp)
+{
+    for(unsigned i = 0; i < this->rows; i++)
+        for(unsigned j = 0; j < this->columns; j++)
+            this->mat[i][j] = std::pow(this->mat[i][j], exp);
+
+    return *this;
+}
 
 template<typename Type> template<typename RightType>
 LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>& rhs)
