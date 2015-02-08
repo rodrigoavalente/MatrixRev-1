@@ -147,41 +147,21 @@ void LinAlg::Matrix<Type>::Add (unsigned& row, unsigned& column, Type& number)
 template<typename Type> template<typename OtherMatrixType>
 bool LinAlg::Matrix<Type>::CheckDimensions (const LinAlg::Matrix<OtherMatrixType>& rhs, unsigned operation)
 {
-    bool checked;
+    bool checked = false;
 
     switch(operation)
     {
     case 0:
-        try
-        {
-            if((this->rows == rhs.getNumberOfRows()) && (this->columns == rhs.getNumberOfColumns()))
-                checked = true;
-            else
-            {
-                throw "As dimensoes nao batem. Impossivel realizar operacao";
-                checked = false;
-            }
-        }
-        catch(const char* msg)
-        {
-            std::cerr << msg;
-        }
+        if((this->rows == rhs.getNumberOfRows()) && (this->columns == rhs.getNumberOfColumns()))
+            checked = true;
+        else
+            std::cout << "As dimensoes nao batem. Impossivel realizar operacao";
         break;
     case 1:
-        try
-        {
-            if(this->columns == rhs.getNumberOfRows())
-                checked = true;
-            else
-            {
-                throw "As dimensoes nao batem. Impossivel realizar operacao";
-                checked = false;
-            }
-        }
-        catch(const char* msg)
-        {
-            std::cerr << msg;
-        }
+        if(this->columns == rhs.getNumberOfRows())
+            checked = true;
+        else
+            std::cout << "As dimensoes nao batem. Impossivel realizar operacao";
         break;
     }
 
@@ -215,6 +195,17 @@ template<typename Type>
 unsigned LinAlg::Matrix<Type>::getNumberOfColumns () const
 {
     return this->columns;
+}
+
+template<typename Type>
+bool LinAlg::Matrix<Type>::isNull ()
+{
+    bool ret = false;
+
+    if(this->mat == NULL)
+        ret = true;
+
+    return ret;
 }
 
 template<typename Type>
@@ -329,6 +320,37 @@ template<typename Type>
 LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator/= (const Type& rhs)
 {
     return *this *= 1/rhs;
+}
+
+
+template<typename Type> template<typename RightType>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>& rhs)
+{
+    LinAlg::Matrix<Type>ret;
+
+    if(this->mat == NULL)
+        ret = rhs;
+    else
+    {
+        unsigned aux = this->columns;
+
+        if(this->rows < rhs.getNumberOfRows())
+            ret.Init(rhs.getNumberOfRows(), this->columns + rhs.getNumberOfRows());
+        else
+            ret.Init(this->rows, this->columns + rhs.getNumberOfRows());
+
+        for(unsigned i = 0; i < this->rows; i++)
+            for(unsigned j = 0; j < this->columns; j++)
+                ret.mat[i][j] = this->mat[i][j];
+
+
+
+        for(unsigned i = 1; i <= rhs.getNumberOfRows(); i++)
+            for(unsigned j = 1; j <= rhs.getNumberOfColumns(); j++)
+                ret(i, aux + j) = rhs(i, j);
+    }
+
+    return ret;
 }
 
 template<typename Type>
