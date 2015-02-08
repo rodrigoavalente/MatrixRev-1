@@ -59,8 +59,13 @@ namespace LinAlg {
 
             template<typename OtherMatrixType>
             void swap (const LinAlg::Matrix<OtherMatrixType>& otherMatrix);
+
+            //Should be declared as friend.
             template<typename OtherMatrixType>
             friend void swap (LinAlg::Matrix<Type>& lhs, LinAlg::Matrix<OtherMatrixType>& rhs) {lhs.swap(rhs);};
+
+            //Should be declared as friend.
+
 
         private:
             void Init (std::string Mat);
@@ -111,6 +116,9 @@ namespace LinAlg {
 
     template<typename Type>
     LinAlg::Matrix<Type> operator^ (LinAlg::Matrix<Type> lhs, double exp) {return lhs ^= exp;}
+
+    template<typename Type>
+    std::ostream& operator<< (std::ostream& output, const LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
     void Zeros (LinAlg::Matrix<Type>& Mat);

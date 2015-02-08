@@ -459,6 +459,20 @@ LinAlg::Matrix<Type> LinAlg::operator~ (LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
+std::ostream& LinAlg::operator<< (std::ostream& output, const LinAlg::Matrix<Type>& mat)
+{
+    for(unsigned i = 1; i <= mat.getNumberOfRows(); i++)
+    {
+        for(unsigned j = 1; j <= mat.getNumberOfColumns(); j++)
+            output << std::setw(10) << mat(i, j) << ' ';
+
+        output << std::endl;
+    }
+
+    return output;
+}
+
+template<typename Type>
 Type LinAlg::Determinant(const LinAlg::Matrix<Type>& mat)
 {
     Type determinant = 0;
