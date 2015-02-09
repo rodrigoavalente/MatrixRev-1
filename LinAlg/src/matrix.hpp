@@ -645,10 +645,10 @@ void LinAlg::Print(const Matrix<Type>& mat)
 {
   std::cout << std::endl;
 
-  for(unsigned i = 1; i <= Mat.getNumberOfRows(); i++)
+  for(unsigned i = 1; i <= mat.getNumberOfRows(); i++)
   {
-    for(unsigned j = 1; j <= Mat.getNumberOfColumns(); j++)
-        std::cout << std::setw(10) << Mat(i, j) << ' ';
+    for(unsigned j = 1; j <= mat.getNumberOfColumns(); j++)
+        std::cout << std::setw(10) << mat(i, j) << ' ';
 
     std::cout << std::endl;
   }

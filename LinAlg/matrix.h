@@ -137,6 +137,12 @@ namespace LinAlg {
     LinAlg::Matrix<Type> Eye (unsigned dimension);
 
     template<typename Type>
+    void Ones (LinAlg::Matrix<Type> & mat);
+
+    template<typename Type>
+    LinAlg::Matrix<Type> Ones (unsigned rows, unsigned columns);
+
+    template<typename Type>
     Type Determinant (const LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
@@ -146,9 +152,9 @@ namespace LinAlg {
     LinAlg::Matrix<Type> Inverse(const LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
-    void Print (const LinAlg::Matrix<Type>& Mat);
+    void Print (const LinAlg::Matrix<Type>& mat);
 };
 
-#include "MatrixHeaders/matrix.hpp"
+#include "src/matrix.hpp"
 
 #endif // MATRIX_H
