@@ -21,6 +21,8 @@ namespace LinAlg {
             unsigned getNumberOfRows () const;
             unsigned getNumberOfColumns () const;
 
+            bool isNull ();
+
             Type& operator() (unsigned row, unsigned column);
             Type operator() (unsigned  row, unsigned column) const;
             void operator() (unsigned row, unsigned column, Type number);
@@ -46,8 +48,10 @@ namespace LinAlg {
 
             LinAlg::Matrix<Type>& operator/= (const Type& rhs /*scalar*/);
 
-            //LinAlg::Matrix<Type>& operator/= (const LinAlg::Matrix<Type>& rhs);
-            //friend LinAlg::Matrix<Type> operator/ (const LinAlg::Matrix<Type> lhs, const LinAlg::Matrix<Type>& rhs) {return lhs /= rhs};
+            template<typename RightType>
+            LinAlg::Matrix<Type> operator| (LinAlg::Matrix<RightType>& rhs);
+            template<typename RightType>
+            LinAlg::Matrix<Type> operator|| (LinAlg::Matrix<RightType>& rhs);
 
             template<typename OtherMatrixType>
             void swap (const LinAlg::Matrix<OtherMatrixType>& otherMatrix);
