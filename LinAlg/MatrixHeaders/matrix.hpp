@@ -301,7 +301,7 @@ LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator*= (const LinAlg::Matrix<Rig
     {
         Type temp;
         LinAlg::Matrix<Type> tempMat(*this);
-        this->Init(this->rows, rhs.columns);
+        this->Init(this->rows, rhs.getNumberOfColumns());
 
         for(unsigned i = 0; i < tempMat.rows; i++)
             for(unsigned col = 0; col < rhs.getNumberOfColumns(); col++)
@@ -322,6 +322,27 @@ LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator/= (const Type& rhs)
     return *this *= 1/rhs;
 }
 
+template<typename Type> template<typename RightType>
+LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator/= (const LinAlg::Matrix<RightType>& rhs)
+{
+    return *this *= LinAlg::Inverse<RightType>(rhs);
+}
+
+template<typename Type>
+LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator^= (double exp)
+{
+    if(exp < 0)
+    {
+        *this = LinAlg::Inverse(*this);
+        exp *= -1;
+    }
+
+    for(unsigned i = 0; i < this->rows; i++)
+        for(unsigned j = 0; j < this->columns; j++)
+            this->mat[i][j] = std::pow(this->mat[i][j], exp);
+
+    return *this;
+}
 
 template<typename Type> template<typename RightType>
 LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>& rhs)
@@ -438,7 +459,7 @@ LinAlg::Matrix<Type> LinAlg::operator~ (LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-Type LinAlg::Determinant(LinAlg::Matrix<Type>& mat)
+Type LinAlg::Determinant(const LinAlg::Matrix<Type>& mat)
 {
     Type determinant = 0;
     unsigned rows = mat.getNumberOfRows(), columns = mat.getNumberOfColumns(), aux1, aux2;
@@ -486,7 +507,7 @@ Type LinAlg::Determinant(LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Cofactor(LinAlg::Matrix<Type>& mat)
+LinAlg::Matrix<Type> LinAlg::Cofactor(const LinAlg::Matrix<Type>& mat)
 {
 	unsigned rows = mat.getNumberOfRows(), columns = mat.getNumberOfColumns(), aux1, aux2;
 	LinAlg::Matrix<Type> temp(rows - 1, columns - 1), ret(rows, columns);
@@ -536,7 +557,7 @@ LinAlg::Matrix<Type> LinAlg::Cofactor(LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Inverse(LinAlg::Matrix<Type>& mat)
+LinAlg::Matrix<Type> LinAlg::Inverse(const LinAlg::Matrix<Type>& mat)
 {
     Type determinant = LinAlg::Determinant(mat);
     unsigned rows = mat.getNumberOfRows(), columns = mat.getNumberOfColumns();
