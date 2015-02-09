@@ -155,13 +155,13 @@ bool LinAlg::Matrix<Type>::CheckDimensions (const LinAlg::Matrix<OtherMatrixType
         if((this->rows == rhs.getNumberOfRows()) && (this->columns == rhs.getNumberOfColumns()))
             checked = true;
         else
-            std::cout << "As dimensoes nao batem. Impossivel realizar operacao";
+            std::cout << "As dimensoes nao batem. Impossivel realizar operacao." << std::endl;
         break;
     case 1:
         if(this->columns == rhs.getNumberOfRows())
             checked = true;
         else
-            std::cout << "As dimensoes nao batem. Impossivel realizar operacao";
+            std::cout << "As dimensoes nao batem. Impossivel realizar operacao." << std::endl;
         break;
     }
 
@@ -430,7 +430,7 @@ std::ostream& LinAlg::operator<< (std::ostream& output, const LinAlg::Matrix<Typ
     for(unsigned i = 1; i <= mat.getNumberOfRows(); i++)
     {
         for(unsigned j = 1; j <= mat.getNumberOfColumns(); j++)
-            output << std::setw(10) << mat(i, j) << ' ';
+            output << std::setw(10) << std::setprecision(5) << std::fixed << mat(i, j) << ' ';
 
         output << std::endl;
     }
