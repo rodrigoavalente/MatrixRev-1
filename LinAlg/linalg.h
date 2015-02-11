@@ -18,6 +18,9 @@ namespace LinAlg {
              LinAlg::Matrix<Type>& output_Q_matrix,
              LinAlg::Matrix<Type>& output_R_matrix);
 
+    template<typename Type>
+    LinAlg::Matrix<Type> Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce);
+
 }
 
 #include "src/linalg.hpp"
