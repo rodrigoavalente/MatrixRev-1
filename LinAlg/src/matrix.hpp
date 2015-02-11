@@ -209,6 +209,28 @@ bool LinAlg::Matrix<Type>::isNull ()
 }
 
 template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::GetRow (unsigned number_of_the_row)
+{
+    LinAlg::Matrix<Type> ret(1, this->columns);
+
+    for(unsigned j = 0; j < ret.columns; j++)
+        ret.mat[number_of_the_row - 1][j] = this->mat[number_of_the_row - 1][j];
+
+    return ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::GetColumn (unsigned number_of_the_column)
+{
+    LinAlg::Matrix<Type> ret(this->rows, 1);
+
+    for(unsigned i = 0; i < ret.rows; i++)
+        ret.mat[i][number_of_the_column - 1] = this->mat[i][number_of_the_column - 1];
+
+    return ret;
+}
+
+template<typename Type>
 Type& LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column)
 {
     return this->mat[row - 1][column - 1];

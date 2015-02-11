@@ -21,6 +21,9 @@ namespace LinAlg {
             unsigned getNumberOfRows () const;
             unsigned getNumberOfColumns () const;
 
+            LinAlg::Matrix<Type> GetRow (unsigned number_of_the_row);
+            LinAlg::Matrix<Type> GetColumn (unsigned number_of_the_column);
+
             bool isNull ();
 
             Type& operator() (unsigned row, unsigned column);
