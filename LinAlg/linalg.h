@@ -21,6 +21,10 @@ namespace LinAlg {
     template<typename Type>
     LinAlg::Matrix<Type> Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce);
 
+    //Simplified away to call Hessemberg_Form.
+    template<typename Type>
+    LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce);
+
 }
 
 #include "src/linalg.hpp"

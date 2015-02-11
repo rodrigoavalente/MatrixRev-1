@@ -84,7 +84,6 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix
             LinAlg::Matrix<Type> X, W(ret.getNumberOfRows(), 1), V, c, Q;
 
             X = ret.GetColumn(k);
-            std::cout << "X: " << std::endl << X << std::endl;
 
             for(unsigned i = k + 1; i <= X.getNumberOfRows(); i++)
                 S += std::pow(X(i, 1), 2);
@@ -94,10 +93,7 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix
             else
                 S = -1*std::sqrt(S);
 
-            std::cout << "S: " << S << std::endl;
-
             R = std::sqrt(2*S*(S + X(k + 1, 1)));
-            std::cout << "R: " << R << std::endl;
 
             for(unsigned i = k + 1; i <= W.getNumberOfRows(); i++)
             {
@@ -107,25 +103,22 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix
                     W(i, 1) = X(i, 1);
             }
 
-            std::cout << "W: "<< std::endl << W << std::endl;
             W *= 1/R;
-            std::cout << "W: "<< std::endl << W << std::endl;
-
             V = ret * W;
-            std::cout << "V: " << std::endl << V << std::endl;
-
             c = (~W) * V;
-            std::cout << "c: " << std::endl << c << std::endl;
-
             Q = V - (c * W);
-            std::cout << "Q: " << std::endl << Q << std::endl;
-
             ret -= ((2 * W * (~Q)) + (2 * Q * (~W)));
-            std::cout << "ret: " << std::endl << ret << std::endl;
         }
     }
     else
         std::cout << "Funcao apenas para matrizes quadradas.";
 
     return ret;
+}
+
+//Simplified away to call Hessemberg_Form
+template<typename Type>
+LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
+{
+    return LinAlg::Hessemberg_Form(matrix_to_reduce);
 }
