@@ -3,7 +3,13 @@
 
 #include "matrix.h"
 
+#include <cfloat>
+
 namespace LinAlg {
+    //Not a linear algebra method. This is a computer to method to guarantee a matrix precision.
+    template <typename  Type>
+    void Balance (LinAlg::Matrix<Type>& matrix_to_balance);
+
     template<typename Type>
     Type Trace (const LinAlg::Matrix<Type>& mat);
 
@@ -21,10 +27,13 @@ namespace LinAlg {
     template<typename Type>
     LinAlg::Matrix<Type> Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce);
 
+
     //Simplified away to call Hessemberg_Form.
     template<typename Type>
     LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce);
 
+    template <typename Type>
+    LinAlg::Matrix<Type> Upper_Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_redue);
 }
 
 #include "src/linalg.hpp"

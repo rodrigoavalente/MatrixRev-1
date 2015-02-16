@@ -1,5 +1,56 @@
 #include "../linalg.h"
 
+template <typename Type>
+void LinAlg::Balance (LinAlg::Matrix<Type> &matrix_to_balance)
+{
+    unsigned aux = 0;
+    Type radix = FLT_RADIX, sqrdx = radix*radix, s, r, g, f, c;
+
+    while(aux == 0)
+    {
+        aux = 1;
+        for(unsigned i = 1; i <= matrix_to_balance.getNumberOfRows(); i++)
+        {
+            r = c = 0.0;
+            for(unsigned j = 1; j <= matrix_to_balance.getNumberOfColumns(); j++)
+                if( j != i)
+                {
+                    c += std::fabs(matrix_to_balance(j, i));
+                    r += std::fabs(matrix_to_balance(i, j));
+                }
+            if(c && r)
+            {
+                g = r/radix;
+                f = 1.0;
+                s = c + r;
+                while(c < g)
+                {
+                    f *= radix;
+                    c *= sqrdx;
+                }
+
+                g = r*radix;
+                while(c > g)
+                {
+                    f /= radix;
+                    c /= sqrdx;
+                }
+                if((c + r)/f < 0.95*s)
+                {
+                    aux = 0;
+                    g = 1.0/f;
+                    for(unsigned j = 1; j <= matrix_to_balance.getNumberOfColumns(); j++)
+                    {
+                        matrix_to_balance(i, j) *= g;
+                        matrix_to_balance(j, i) *= f;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
 template<typename Type>
 Type LinAlg::Trace (const LinAlg::Matrix<Type>& mat)
 {
@@ -118,7 +169,13 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix
 
 //Simplified away to call Hessemberg_Form
 template<typename Type>
-LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
+LinAlg::Matrix<Type> LinAlg::Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
 {
     return LinAlg::Hessemberg_Form(matrix_to_reduce);
+}
+
+template <typename Type>
+LinAlg::Matrix<Type> LinAlg::Upper_Hessemberg_Form (const LinAlg::Matrix<Type> &matrix_to_redue)
+{
+    
 }
