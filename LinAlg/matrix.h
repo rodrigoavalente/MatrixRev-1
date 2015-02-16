@@ -24,8 +24,8 @@ namespace LinAlg {
             LinAlg::Matrix<Type> GetRow (unsigned number_of_the_row);
             LinAlg::Matrix<Type> GetColumn (unsigned number_of_the_column);
 
-            bool isNull ();
-            bool isSquare ();
+            bool isNull () const;
+            bool isSquare () const;
 
             Type& operator() (unsigned row, unsigned column);
             Type operator() (unsigned  row, unsigned column) const;

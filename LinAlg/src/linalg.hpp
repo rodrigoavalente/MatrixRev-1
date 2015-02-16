@@ -38,26 +38,31 @@ void LinAlg::QR_Factorization (const LinAlg::Matrix<Type>& input_matrix,
 
             temp = LinAlg::Eye<Type>(R_rows);
 
-            if(std::abs(output_R_matrix(i - 1, j)) > std::abs(output_R_matrix(i, j)))
+            if(output_R_matrix(i, j) != 0)
             {
-                tal = output_R_matrix(i, j)/output_R_matrix(i - 1, j);
-                gama = 1/(std::sqrt(1 + std::pow(tal, 2)));
-                sigma = tal*gama;
-            }
-            else
-            {
-                tal = output_R_matrix(i - 1, j)/output_R_matrix(i, j);
-                sigma = 1/(std::sqrt(1 + std::pow(tal, 2)));
-                gama = sigma*tal;
+                if(std::abs(output_R_matrix(i - 1, j)) > std::abs(output_R_matrix(i, j)))
+                {
+                    tal = output_R_matrix(i, j)/output_R_matrix(i - 1, j);
+                    gama = 1/(std::sqrt(1 + std::pow(tal, 2)));
+                    sigma = tal*gama;
+                }
+                else
+                {
+                    tal = output_R_matrix(i - 1, j)/output_R_matrix(i, j);
+                    sigma = 1/(std::sqrt(1 + std::pow(tal, 2)));
+                    gama = sigma*tal;
+                }
+
+                temp(i, i) = gama;
+                temp(i, i - 1) = sigma;
+                temp(i - 1, i) = -sigma;
+                temp(i - 1, i - 1) = gama;
+
+                output_R_matrix = (~temp)*output_R_matrix;
+                output_Q_matrix *= temp;
             }
 
-            temp(i, i) = gama;
-            temp(i, i - 1) = sigma;
-            temp(i - 1, i) = -sigma;
-            temp(i - 1, i - 1) = gama;
 
-            output_R_matrix = (~temp)*output_R_matrix;
-            output_Q_matrix *= temp;
         }
 
 }
@@ -88,7 +93,7 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix
             for(unsigned i = k + 1; i <= X.getNumberOfRows(); i++)
                 S += std::pow(X(i, 1), 2);
 
-            if(X(1,1) > 0)
+            if(X(k + 1,1) > 0)
                 S = std::sqrt(S);
             else
                 S = -1*std::sqrt(S);
@@ -116,9 +121,36 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix
     return ret;
 }
 
-//Simplified away to call Hessemberg_Form
+//Simplified away to call Hessemberg_Form.
 template<typename Type>
-LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
+LinAlg::Matrix<Type> LinAlg::Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
 {
     return LinAlg::Hessemberg_Form(matrix_to_reduce);
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::EigenValues(const LinAlg::Matrix<Type>& mat)
+{
+    LinAlg::Matrix<Type> ret(mat.getNumberOfRows(), 2);
+
+    if(mat.isSquare())
+    {
+        LinAlg::Matrix<Type> H = LinAlg::Hess(mat), A;
+
+        A = H;
+
+        for(unsigned i = 0; i < 200; i++)
+        {
+            LinAlg::Matrix<Type> Q, R;
+
+            LinAlg::QR(A, Q, R);
+            A = R*Q;
+        }
+
+        ret = A;
+    }
+    else
+        std::cout << "Funcao apenas para matrizes quadradas.";
+
+    return ret;
 }

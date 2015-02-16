@@ -25,6 +25,9 @@ namespace LinAlg {
     template<typename Type>
     LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce);
 
+    template<typename Type>
+    LinAlg::Matrix<Type> EigenValues(const LinAlg::Matrix<Type>& mat);
+
 }
 
 #include "src/linalg.hpp"

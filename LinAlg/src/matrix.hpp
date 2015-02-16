@@ -198,7 +198,7 @@ unsigned LinAlg::Matrix<Type>::getNumberOfColumns () const
 }
 
 template<typename Type>
-bool LinAlg::Matrix<Type>::isNull ()
+bool LinAlg::Matrix<Type>::isNull () const
 {
     bool ret = false;
 
@@ -209,7 +209,7 @@ bool LinAlg::Matrix<Type>::isNull ()
 }
 
 template<typename Type>
-bool LinAlg::Matrix<Type>::isSquare ()
+bool LinAlg::Matrix<Type>::isSquare () const
 {
     bool ret = false;
 
