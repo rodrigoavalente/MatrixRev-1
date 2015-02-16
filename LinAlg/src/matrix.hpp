@@ -241,6 +241,36 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::GetColumn (unsigned number_of_the_col
     return ret;
 }
 
+template <typename Type>
+void LinAlg::Matrix<Type>::SwapRows (unsigned row_to_be_swapped, unsigned row_to_take_place)
+{
+    LinAlg::Matrix<Type> aux1, aux2;
+
+    aux1 = this->GetRow(row_to_be_swapped);
+    aux2 = this->GetRow(row_to_take_place);
+
+    for(unsigned j = 0; j < this->columns; j++)
+    {
+        this->mat[row_to_be_swapped - 1][j] = aux2.mat[0][j];
+        this->mat[row_to_take_place - 1][j] = aux1.mat[0][j];
+    }
+}
+
+template <typename Type>
+void LinAlg::Matrix<Type>::SwapColumns (unsigned column_to_be_swapped, unsigned column_to_take_place)
+{
+    LinAlg::Matrix<Type>aux1, aux2;
+
+    aux1 = this->GetColumn(column_to_be_swapped);
+    aux2 = this->GetColumn(column_to_take_place);
+
+    for(unsigned i = 0; i < this->rows; i++)
+    {
+        this->mat[i][column_to_be_swapped - 1] = aux2.mat[i][0];
+        this->mat[i][column_to_take_place - 1] = aux1.mat[i][0];
+    }
+}
+
 template<typename Type>
 Type& LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column)
 {

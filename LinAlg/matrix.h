@@ -24,6 +24,9 @@ namespace LinAlg {
             LinAlg::Matrix<Type> GetRow (unsigned number_of_the_row);
             LinAlg::Matrix<Type> GetColumn (unsigned number_of_the_column);
 
+            void SwapRows (unsigned row_to_be_swapped, unsigned  row_to_take_place);
+            void SwapColumns (unsigned column_to_be_swapped, unsigned column_to_take_place);
+
             bool isNull ();
             bool isSquare ();
 
