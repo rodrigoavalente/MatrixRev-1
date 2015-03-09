@@ -27,6 +27,8 @@ namespace LinAlg {
             void SwapRows (unsigned row_to_be_swapped, unsigned  row_to_take_place);
             void SwapColumns (unsigned column_to_be_swapped, unsigned column_to_take_place);
 
+            unsigned Size ();
+
             bool isNull ();
             bool isSquare ();
 

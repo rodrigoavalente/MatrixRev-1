@@ -271,6 +271,19 @@ void LinAlg::Matrix<Type>::SwapColumns (unsigned column_to_be_swapped, unsigned 
     }
 }
 
+template <typename Type>
+unsigned LinAlg::Matrix<Type>::Size ()
+{
+    unsigned ret;
+
+    if(this->rows >= this->columns)
+        ret = this->rows;
+    else
+        ret = this->columns;
+
+    return ret;
+}
+
 template<typename Type>
 Type& LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column)
 {

@@ -1,6 +1,8 @@
 #ifndef LINALG_H
 #define LINALG_H
 
+#define SWAP
+
 #include "matrix.h"
 
 #include <cfloat>
@@ -33,7 +35,7 @@ namespace LinAlg {
     LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce);
 
     template <typename Type>
-    LinAlg::Matrix<Type> Upper_Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_redue);
+    LinAlg::Matrix<Type> EigenValues(const LinAlg::Matrix<Type>& matrix_to_get_eigenvalues, unsigned iterations = 100);
 }
 
 #include "src/linalg.hpp"

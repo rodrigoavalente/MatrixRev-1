@@ -85,30 +85,34 @@ void LinAlg::QR_Factorization (const LinAlg::Matrix<Type>& input_matrix,
     for(unsigned j = 1; j <= R_columns; j++)
         for(unsigned i = R_rows; i >= j + 1; i--)
         {
-            LinAlg::Matrix<Type> temp;
-
-            temp = LinAlg::Eye<Type>(R_rows);
-
-            if(std::abs(output_R_matrix(i - 1, j)) > std::abs(output_R_matrix(i, j)))
+            if(output_R_matrix(i, j) != 0)
             {
-                tal = output_R_matrix(i, j)/output_R_matrix(i - 1, j);
-                gama = 1/(std::sqrt(1 + std::pow(tal, 2)));
-                sigma = tal*gama;
-            }
-            else
-            {
-                tal = output_R_matrix(i - 1, j)/output_R_matrix(i, j);
-                sigma = 1/(std::sqrt(1 + std::pow(tal, 2)));
-                gama = sigma*tal;
+                LinAlg::Matrix<Type> temp;
+
+                temp = LinAlg::Eye<Type>(R_rows);
+
+                if(std::abs(output_R_matrix(i - 1, j)) > std::abs(output_R_matrix(i, j)))
+                {
+                    tal = output_R_matrix(i, j)/output_R_matrix(i - 1, j);
+                    gama = 1/(std::sqrt(1 + std::pow(tal, 2)));
+                    sigma = tal*gama;
+                }
+                else
+                {
+                    tal = output_R_matrix(i - 1, j)/output_R_matrix(i, j);
+                    sigma = 1/(std::sqrt(1 + std::pow(tal, 2)));
+                    gama = sigma*tal;
+                }
+
+                temp(i, i) = gama;
+                temp(i, i - 1) = sigma;
+                temp(i - 1, i) = -sigma;
+                temp(i - 1, i - 1) = gama;
+
+                output_R_matrix = (~temp)*output_R_matrix;
+                output_Q_matrix *= temp;
             }
 
-            temp(i, i) = gama;
-            temp(i, i - 1) = sigma;
-            temp(i - 1, i) = -sigma;
-            temp(i - 1, i - 1) = gama;
-
-            output_R_matrix = (~temp)*output_R_matrix;
-            output_Q_matrix *= temp;
         }
 
 }
@@ -122,47 +126,44 @@ void LinAlg::QR (const LinAlg::Matrix<Type>& input_matrix,
     LinAlg::QR_Factorization(input_matrix, output_Q_matrix, output_R_matrix);
 }
 
-template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce)
+template <typename Type>
+LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type> &matrix_to_reduce)
 {
+    unsigned aux = 1;
     LinAlg::Matrix<Type> ret(matrix_to_reduce);
 
     if(ret.isSquare())
     {
-        for(unsigned k = 1; k <= ret.getNumberOfRows() - 2; k++)
+        for(unsigned i = 3; i <= ret.getNumberOfRows(); i++)
         {
-            Type R, S = 0;
-            LinAlg::Matrix<Type> X, W(ret.getNumberOfRows(), 1), V, c, Q;
+            Type alfa = 0, gama;
+            LinAlg::Matrix<Type> omega(ret.getNumberOfRows(), 1), H;
 
-            X = ret.GetColumn(k);
+            for(unsigned k = i - 1; k <= ret.getNumberOfRows(); k++)
+                alfa += std::pow(ret(k, aux), 2);
 
-            for(unsigned i = k + 1; i <= X.getNumberOfRows(); i++)
-                S += std::pow(X(i, 1), 2);
-
-            if(X(1,1) > 0)
-                S = std::sqrt(S);
+            if(ret(i - 1, aux) < 0)
+                alfa = -1*std::sqrt(alfa);
             else
-                S = -1*std::sqrt(S);
+                alfa = std::sqrt(alfa);
 
-            R = std::sqrt(2*S*(S + X(k + 1, 1)));
+            gama = std::sqrt((std::pow(alfa, 2)/2) - 0.5*ret(i - 1, aux)*alfa);
 
-            for(unsigned i = k + 1; i <= W.getNumberOfRows(); i++)
-            {
-                if(i == k + 1)
-                    W(i, 1) = X(i, 1) + S;
-                else
-                    W(i, 1) = X(i, 1);
-            }
+            for(unsigned k = 1; k <= i - 2; k++)
+                omega(k, 1) = 0;
 
-            W *= 1/R;
-            V = ret * W;
-            c = (~W) * V;
-            Q = V - (c * W);
-            ret -= ((2 * W * (~Q)) + (2 * Q * (~W)));
+            omega(i - 1, 1) = ((ret(i - 1, aux) - alfa))/(2*gama);
+
+            for(unsigned k = i; k <= omega.getNumberOfRows(); k++)
+                omega(k, 1) = ret(k, aux)/(2*gama);
+
+
+            H = LinAlg::Eye<Type>(ret.getNumberOfRows()) - 2*omega*(~omega);
+            ret = H*ret*H;
+
+            aux++;
         }
     }
-    else
-        std::cout << "Funcao apenas para matrizes quadradas.";
 
     return ret;
 }
@@ -175,7 +176,21 @@ LinAlg::Matrix<Type> LinAlg::Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
 }
 
 template <typename Type>
-LinAlg::Matrix<Type> LinAlg::Upper_Hessemberg_Form (const LinAlg::Matrix<Type> &matrix_to_redue)
+LinAlg::Matrix<Type> LinAlg::EigenValues(const LinAlg::Matrix<Type> &matrix_to_get_eigenvalues, unsigned iterations = 100)
 {
-    
+    LinAlg::Matrix<Type> ret(matrix_to_get_eigenvalues), temp = LinAlg::Eye<Type>(ret.getNumberOfRows());
+
+    LinAlg::Balance(ret);
+    ret = LinAlg::Hess(ret);
+
+    for(unsigned i = 0; i < iterations; i++)
+    {
+        LinAlg::Matrix<Type> Q, R;
+
+        LinAlg::QR(ret, Q, R);
+
+        ret = R*Q;
+    }
+
+    return ret;
 }
