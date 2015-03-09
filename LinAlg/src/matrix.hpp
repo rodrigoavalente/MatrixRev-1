@@ -209,6 +209,82 @@ bool LinAlg::Matrix<Type>::isNull ()
 }
 
 template<typename Type>
+bool LinAlg::Matrix<Type>::isSquare ()
+{
+    bool ret = false;
+
+    if(this->rows == this->columns)
+        ret = true;
+
+    return ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::GetRow (unsigned number_of_the_row)
+{
+    LinAlg::Matrix<Type> ret(1, this->columns);
+
+    for(unsigned j = 0; j < ret.columns; j++)
+        ret.mat[0][j] = this->mat[number_of_the_row - 1][j];
+
+    return ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::GetColumn (unsigned number_of_the_column)
+{
+    LinAlg::Matrix<Type> ret(this->rows, 1);
+
+    for(unsigned i = 0; i < ret.rows; i++)
+        ret.mat[i][0] = this->mat[i][number_of_the_column - 1];
+
+    return ret;
+}
+
+template <typename Type>
+void LinAlg::Matrix<Type>::SwapRows (unsigned row_to_be_swapped, unsigned row_to_take_place)
+{
+    LinAlg::Matrix<Type> aux1, aux2;
+
+    aux1 = this->GetRow(row_to_be_swapped);
+    aux2 = this->GetRow(row_to_take_place);
+
+    for(unsigned j = 0; j < this->columns; j++)
+    {
+        this->mat[row_to_be_swapped - 1][j] = aux2.mat[0][j];
+        this->mat[row_to_take_place - 1][j] = aux1.mat[0][j];
+    }
+}
+
+template <typename Type>
+void LinAlg::Matrix<Type>::SwapColumns (unsigned column_to_be_swapped, unsigned column_to_take_place)
+{
+    LinAlg::Matrix<Type>aux1, aux2;
+
+    aux1 = this->GetColumn(column_to_be_swapped);
+    aux2 = this->GetColumn(column_to_take_place);
+
+    for(unsigned i = 0; i < this->rows; i++)
+    {
+        this->mat[i][column_to_be_swapped - 1] = aux2.mat[i][0];
+        this->mat[i][column_to_take_place - 1] = aux1.mat[i][0];
+    }
+}
+
+template <typename Type>
+unsigned LinAlg::Matrix<Type>::Size ()
+{
+    unsigned ret;
+
+    if(this->rows >= this->columns)
+        ret = this->rows;
+    else
+        ret = this->columns;
+
+    return ret;
+}
+
+template<typename Type>
 Type& LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column)
 {
     return this->mat[row - 1][column - 1];
@@ -297,7 +373,12 @@ LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator*= (const Type& rhs /*scalar
 template<typename Type> template<typename RightType>
 LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator*= (const LinAlg::Matrix<RightType>& rhs)
 {
-    if(CheckDimensions(rhs, 1))
+
+    if ((this->rows == 1) && (this->columns == 1))
+    {
+        *this = this->mat[0][0] * rhs;
+    }
+    else if(CheckDimensions(rhs, 1))
     {
         Type temp;
         LinAlg::Matrix<Type> tempMat(*this);
@@ -401,7 +482,7 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator|| (LinAlg::Matrix<RightType>
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::operator- (LinAlg::Matrix<Type>& mat)
+LinAlg::Matrix<Type> LinAlg::operator- (const LinAlg::Matrix<Type>& mat)
 {
     LinAlg::Matrix<Type> temp(mat);
 
