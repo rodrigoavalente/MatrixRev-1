@@ -426,7 +426,7 @@ LinAlg::Matrix<Type>& LinAlg::Matrix<Type>::operator^= (double exp)
 }
 
 template<typename Type> template<typename RightType>
-LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>& rhs)
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType> rhs)
 {
     LinAlg::Matrix<Type>ret;
 
@@ -437,9 +437,9 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>&
         unsigned aux = this->columns;
 
         if(this->rows < rhs.getNumberOfRows())
-            ret.Init(rhs.getNumberOfRows(), this->columns + rhs.getNumberOfRows());
+            ret.Init(rhs.getNumberOfRows(), this->columns + rhs.getNumberOfColumns());
         else
-            ret.Init(this->rows, this->columns + rhs.getNumberOfRows());
+            ret.Init(this->rows, this->columns + rhs.getNumberOfColumns());
 
         for(unsigned i = 0; i < this->rows; i++)
             for(unsigned j = 0; j < this->columns; j++)
@@ -454,7 +454,7 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator| (LinAlg::Matrix<RightType>&
 }
 
 template<typename Type> template<typename RightType>
-LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator|| (LinAlg::Matrix<RightType>& rhs)
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator|| (LinAlg::Matrix<RightType> rhs)
 {
     LinAlg::Matrix<Type>ret;
 

@@ -1,5 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+#define _USE_MATH_DEFINES
 
 #include <cmath>
 #include <string>
@@ -62,9 +63,9 @@ namespace LinAlg {
             LinAlg::Matrix<Type>& operator^= (double exp);
 
             template<typename RightType>
-            LinAlg::Matrix<Type> operator| (LinAlg::Matrix<RightType>& rhs);
+            LinAlg::Matrix<Type> operator| (LinAlg::Matrix<RightType> rhs);
             template<typename RightType>
-            LinAlg::Matrix<Type> operator|| (LinAlg::Matrix<RightType>& rhs);
+            LinAlg::Matrix<Type> operator|| (LinAlg::Matrix<RightType> rhs);
 
             template<typename OtherMatrixType>
             void swap (const LinAlg::Matrix<OtherMatrixType>& otherMatrix);

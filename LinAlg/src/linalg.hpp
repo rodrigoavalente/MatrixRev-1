@@ -194,3 +194,71 @@ LinAlg::Matrix<Type> LinAlg::EigenValues(const LinAlg::Matrix<Type> &matrix_to_g
 
     return ret;
 }
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::RotationMatrix2D(double angle)
+{
+    LinAlg::Matrix<Type> ret(2, 2);
+
+    angle = (angle*M_PI)/180;
+
+    ret(1, 1) = std::cos(angle);
+    ret(1, 2) = -std::sin(angle);
+    ret(2, 1) = std::sin(angle);
+    ret(2, 2) = std::cos(angle);
+
+    return ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::RotationMatrix3D(double angle, char axis)
+{
+    LinAlg::Matrix<Type> ret(3, 3);
+
+    angle = (angle*M_PI)/180;
+
+    switch(axis)
+    {
+    case 'x':
+        ret(1, 1) = 1;
+        ret(2, 2) = std::cos(angle);
+        ret(2, 3) = -std::sin(angle);
+        ret(3, 2) = std::cos(angle);
+        ret(3, 3) = std::sin(angle);
+        break;
+
+    case 'y':
+        ret(1, 1) = std::cos(angle);
+        ret(1, 3) = std::sin(angle);
+        ret(2, 2) = 1;
+        ret(3, 1) = -std::sin(angle);
+        ret(3, 3) = std::cos(angle);
+        break;
+
+    case 'z':
+        ret(1, 1) = std::cos(angle);
+        ret(1, 2) = -std::sin(angle);
+        ret(2, 1) = std::sin(angle);
+        ret(2, 2) = std::cos(angle);
+        break;
+
+    default:
+        std::cout << "Eixo inexistente.";
+    }
+
+    return ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Mapping(LinAlg::Matrix<Type> BCoordinates, LinAlg::Matrix<Type> BCoordinatesInA, double angle, char axis)
+{
+    LinAlg::Matrix<Type> ret, rotationMatrix, aux1;
+
+    rotationMatrix = LinAlg::RotationMatrix3D<Type>(angle, axis);
+    aux1 = "1";
+    BCoordinates = BCoordinates||aux1;
+
+    ret = (rotationMatrix|(BCoordinatesInA||aux1)) * BCoordinates;
+
+    return ret;
+}
