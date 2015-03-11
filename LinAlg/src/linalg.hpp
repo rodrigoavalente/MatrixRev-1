@@ -250,15 +250,19 @@ LinAlg::Matrix<Type> LinAlg::RotationMatrix3D(double angle, char axis)
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::Mapping(LinAlg::Matrix<Type> BCoordinates, LinAlg::Matrix<Type> BCoordinatesInA, double angle, char axis)
+LinAlg::Matrix<Type> LinAlg::HomogeneousTransformation(LinAlg::Matrix<Type> BCoordinates, LinAlg::Matrix<Type> BCoordinatesInA, double angle, char axis)
 {
     LinAlg::Matrix<Type> ret, rotationMatrix, aux1;
 
-    rotationMatrix = LinAlg::RotationMatrix3D<Type>(angle, axis);
-    aux1 = "1";
-    BCoordinates = BCoordinates||aux1;
+    rotationMatrix = RotationMatrix3D<Type>(angle, axis);
 
-    ret = (rotationMatrix|(BCoordinatesInA||aux1)) * BCoordinates;
+    ret = rotationMatrix*BCoordinates + BCoordinatesInA;
 
     return ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::FixedAngles(double angle)
+{
+    return RotationMatrix3D(angle, 'z') * RotationMatrix3D(angle, 'y') * RotationMatrix3D(angle, 'x');
 }

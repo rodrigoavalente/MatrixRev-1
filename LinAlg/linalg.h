@@ -43,8 +43,10 @@ namespace LinAlg {
     LinAlg::Matrix<Type> RotationMatrix3D(double angle, char axis);
 
     template <typename Type>
-    LinAlg::Matrix<Type> Mapping(LinAlg::Matrix<Type> BCoordinates, LinAlg::Matrix<Type> BCoordinatesInA, double angle, char axis);
-}
+    LinAlg::Matrix<Type> HomogeneousTransformation(LinAlg::Matrix<Type> BCoordinates, LinAlg::Matrix<Type> BCoordinatesInA, double angle, char axis);
+
+    template <typename Type>
+    LinAlg::Matrix<Type> FixedAngles(double angle);
 
 #include "src/linalg.hpp"
 
