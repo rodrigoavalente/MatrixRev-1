@@ -29,9 +29,19 @@ namespace LinAlg {
     template<typename Type>
     LinAlg::Matrix<Type> Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce);
 
+    template<typename Type>
+    void Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce,
+                          LinAlg::Matrix<Type>& unitary_matrix,
+                          LinAlg::Matrix<Type>& hessemberg_matrix);
+
     //Simplified away to call Hessemberg_Form.
     template<typename Type>
     LinAlg::Matrix<Type> Hess (const LinAlg::Matrix<Type>& matrix_to_reduce);
+
+    template<typename Type>
+    void Hess (const LinAlg::Matrix<Type>& matrix_to_reduce,
+               LinAlg::Matrix<Type>& unitary_matrix,
+               LinAlg::Matrix<Type>& hessemberg_matrix);
 
     template <typename Type>
     LinAlg::Matrix<Type> EigenValues(const LinAlg::Matrix<Type>& matrix_to_get_eigenvalues, unsigned iterations = 100); //Not well tested, is incomplete.
@@ -47,6 +57,8 @@ namespace LinAlg {
 
     template <typename Type>
     LinAlg::Matrix<Type> FixedAngles(double angle);
+
+}
 
 #include "src/linalg.hpp"
 

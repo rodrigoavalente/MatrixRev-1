@@ -168,6 +168,51 @@ LinAlg::Matrix<Type> LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type> &matrix
     return ret;
 }
 
+template<typename Type>
+void LinAlg::Hessemberg_Form (const LinAlg::Matrix<Type>& matrix_to_reduce,
+                              LinAlg::Matrix<Type>& unitary_matrix,
+                              LinAlg::Matrix<Type>& hessemberg_matrix)
+{
+    unsigned aux = 1;
+
+    hessemberg_matrix = matrix_to_reduce;
+    unitary_matrix = LinAlg::Eye<Type>(hessemberg_matrix.Size());
+
+    if(hessemberg_matrix.isSquare())
+    {
+        for(unsigned i = 3; i <= hessemberg_matrix.getNumberOfRows(); i++)
+        {
+            Type alfa = 0, gama;
+            LinAlg::Matrix<Type> omega(hessemberg_matrix.getNumberOfRows(), 1), H;
+
+            for(unsigned k = i - 1; k <= hessemberg_matrix.getNumberOfRows(); k++)
+                alfa += std::pow(hessemberg_matrix(k, aux), 2);
+
+            if(hessemberg_matrix(i - 1, aux) < 0)
+                alfa = -1*std::sqrt(alfa);
+            else
+                alfa = std::sqrt(alfa);
+
+            gama = std::sqrt((std::pow(alfa, 2)/2) - 0.5*hessemberg_matrix(i - 1, aux)*alfa);
+
+            for(unsigned k = 1; k <= i - 2; k++)
+                omega(k, 1) = 0;
+
+            omega(i - 1, 1) = ((hessemberg_matrix(i - 1, aux) - alfa))/(2*gama);
+
+            for(unsigned k = i; k <= omega.getNumberOfRows(); k++)
+                omega(k, 1) = hessemberg_matrix(k, aux)/(2*gama);
+
+
+            H = LinAlg::Eye<Type>(hessemberg_matrix.getNumberOfRows()) - 2*omega*(~omega);
+            unitary_matrix *= H;
+            hessemberg_matrix = H*hessemberg_matrix*H;
+
+            aux++;
+        }
+    }
+}
+
 //Simplified away to call Hessemberg_Form
 template<typename Type>
 LinAlg::Matrix<Type> LinAlg::Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
@@ -175,24 +220,20 @@ LinAlg::Matrix<Type> LinAlg::Hess (const LinAlg::Matrix<Type>& matrix_to_reduce)
     return LinAlg::Hessemberg_Form(matrix_to_reduce);
 }
 
+template<typename Type>
+void LinAlg::Hess(const LinAlg::Matrix<Type>& matrix_to_reduce,
+                  LinAlg::Matrix<Type>& unitary_matrix,
+                  LinAlg::Matrix<Type>& hessemberg_matrix)
+{
+    LinAlg::Hessemberg_Form(matrix_to_reduce,unitary_matrix, hessemberg_matrix);
+}
+
+
 template <typename Type>
 LinAlg::Matrix<Type> LinAlg::EigenValues(const LinAlg::Matrix<Type> &matrix_to_get_eigenvalues, unsigned iterations = 100)
 {
-    LinAlg::Matrix<Type> ret(matrix_to_get_eigenvalues), temp = LinAlg::Eye<Type>(ret.getNumberOfRows());
 
-    LinAlg::Balance(ret);
-    ret = LinAlg::Hess(ret);
 
-    for(unsigned i = 0; i < iterations; i++)
-    {
-        LinAlg::Matrix<Type> Q, R;
-
-        LinAlg::QR(ret, Q, R);
-
-        ret = R*Q;
-    }
-
-    return ret;
 }
 
 template<typename Type>
@@ -264,5 +305,7 @@ LinAlg::Matrix<Type> LinAlg::HomogeneousTransformation(LinAlg::Matrix<Type> BCoo
 template<typename Type>
 LinAlg::Matrix<Type> LinAlg::FixedAngles(double angle)
 {
-    return RotationMatrix3D(angle, 'z') * RotationMatrix3D(angle, 'y') * RotationMatrix3D(angle, 'x');
+    using namespace LinAlg;
+
+    return RotationMatrix3D<Type>(angle, 'z') * RotationMatrix3D<Type>(angle, 'y') * RotationMatrix3D<Type>(angle, 'x');
 }
