@@ -44,7 +44,7 @@ namespace LinAlg {
                LinAlg::Matrix<Type>& hessemberg_matrix);
 
     template <typename Type>
-    LinAlg::Matrix<Type> EigenValues(const LinAlg::Matrix<Type>& matrix_to_get_eigenvalues, unsigned iterations = 100); //Not well tested, is incomplete.
+    LinAlg::Matrix<Type> EigenValues(const LinAlg::Matrix<Type>& matrix_to_get_eigenvalues, unsigned iterations = 1000); //Not well tested, is incomplete.
 
     template <typename Type>
     LinAlg::Matrix<Type> RotationMatrix2D(double angle);

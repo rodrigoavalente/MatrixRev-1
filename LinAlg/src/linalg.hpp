@@ -230,9 +230,114 @@ void LinAlg::Hess(const LinAlg::Matrix<Type>& matrix_to_reduce,
 
 
 template <typename Type>
-LinAlg::Matrix<Type> LinAlg::EigenValues(const LinAlg::Matrix<Type> &matrix_to_get_eigenvalues, unsigned iterations = 100)
+LinAlg::Matrix<Type> LinAlg::EigenValues(const LinAlg::Matrix<Type> &matrix_to_get_eigenvalues, unsigned iterations = 1000)
 {
+    LinAlg::Matrix<Type> A(matrix_to_get_eigenvalues), ret(matrix_to_get_eigenvalues.Size(), 2);
 
+    if(A.isSquare())
+    {
+        Type firstShift, secondShift;
+        unsigned aux = 1;
+
+        firstShift = secondShift = A(A.getNumberOfRows(), A.getNumberOfColumns());
+
+        for(unsigned i = 0; i <= iterations; i++)
+        {
+            Type sum = 0;
+            LinAlg::Matrix<Type> AI, Q, R;
+
+            if(i >= round(iterations/2))
+            {
+                LinAlg::QR((A - firstShift*LinAlg::Eye<Type>(A.Size())), Q, R);
+                A = R*Q + firstShift*LinAlg::Eye<Type>(A.Size());
+                if(A.Size() - 1 == 0)
+                    firstShift = A(A.Size(), A.Size());
+                else
+                    firstShift = A(A.Size() - 1, A.Size() - 1);
+
+                if(A.isNull())
+                    break;
+
+                LinAlg::QR((A - firstShift*LinAlg::Eye<Type>(A.Size())), Q, R);
+                A = R*Q + firstShift*LinAlg::Eye<Type>(A.Size());
+                firstShift = A(A.Size(), A.Size());
+            }
+            else
+            {
+                AI = LinAlg::Eye<Type>(A.Size());
+                for(unsigned k = 1; k <= A.Size(); k++)
+                {
+                    firstShift = A(k, k);
+                    AI = AI*(A - firstShift*LinAlg::Eye<Type>(A.Size()));
+                }
+
+                LinAlg::QR((A - firstShift*LinAlg::Eye<Type>(A.Size()) * (A - secondShift*LinAlg::Eye<Type>(A.Size()))), Q, R);
+                A = (~Q)*A*Q;
+            }
+
+            for(unsigned n = 1; n < A.getNumberOfColumns(); n++)
+                sum += std::abs(A(A.getNumberOfRows(), n));
+
+            if(sum < 1e-6 && !(A.isNull()))
+            {
+                unsigned tempRow = 0;
+
+                if(A.Size() - 1 == 0)
+                    tempRow = 0;
+                else
+                    tempRow = A.Size() - 1;
+
+                LinAlg::Matrix<Type> tempA(tempRow, tempRow);
+
+                ret(aux, 1) = A(A.Size(), A.Size());
+
+                for(unsigned m = 1; m <= tempA.getNumberOfRows(); m++)
+                    for(unsigned n = 1; n <= tempA.getNumberOfColumns(); n++)
+                        tempA(m, n) = A(m, n);
+
+                A = tempA;
+                aux++;
+            }
+
+            sum = 0;
+            for(unsigned m = 2; m <= A.getNumberOfRows(); m++)
+                sum += std::abs(A(m, 1));
+
+            if(sum < 1e-6 && !(A.isNull()))
+            {
+                unsigned tempRow = 0;
+
+                if(A.Size() - 1 == 0)
+                    tempRow = 0;
+                else
+                    tempRow = A.Size() - 1;
+
+                LinAlg::Matrix<Type> tempA(tempRow, tempRow);
+
+
+                ret(aux, 1) = A(1, 1);
+                for(unsigned m = 1; m <= tempA.getNumberOfRows(); m++)
+                    for(unsigned n = 1; n <= tempA.getNumberOfColumns(); n++)
+                        tempA(m, n) = A(m + 1, n + 1);
+
+                A = tempA;
+                aux++;
+            }
+
+            if(A.isNull())
+                break;
+        }
+
+        if(!A.isNull())
+        {
+            ret(aux, 1) = LinAlg::Trace(A)/2;
+            ret(aux, 2) = std::sqrt(std::abs(A(2, 1)*A(1, 2)));
+            ret(aux + 1, 1) = LinAlg::Trace(A)/2;
+            ret(aux + 1, 2) = -std::sqrt(std::abs(A(2, 1)*A(1, 2)));
+        }
+    }
+
+    return ret;
 
 }
 
