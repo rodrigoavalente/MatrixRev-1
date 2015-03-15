@@ -94,19 +94,26 @@ void LinAlg::Matrix<Type>::Init (std::string Mat)
 template<typename Type>
 void LinAlg::Matrix<Type>::Init (unsigned row, unsigned column)
 {
-    if(row == 0)
-        row = 1;
-    if(column == 0)
-        column = 1;
+    if(row == 0 || column == 0)
+    {
+        this->rows = row;
+        this->columns = column;
 
-    this->rows = row;
-    this->columns = column;
+        this->mat = NULL;
+    }
+    else
+    {
 
-    this->mat = new Type*[row];
-    for(unsigned i = 0; i < row; i++)
-        this->mat[i] = new Type[column];
+        this->rows = row;
+        this->columns = column;
 
-    LinAlg::Zeros(*this);
+        this->mat = new Type*[row];
+        for(unsigned i = 0; i < row; i++)
+            this->mat[i] = new Type[column];
+
+        LinAlg::Zeros(*this);
+
+    }
 };
 
 template<typename Type>
@@ -272,7 +279,7 @@ void LinAlg::Matrix<Type>::SwapColumns (unsigned column_to_be_swapped, unsigned 
 }
 
 template <typename Type>
-unsigned LinAlg::Matrix<Type>::Size ()
+unsigned LinAlg::Matrix<Type>::Size () const
 {
     unsigned ret;
 
@@ -494,7 +501,7 @@ LinAlg::Matrix<Type> LinAlg::operator- (const LinAlg::Matrix<Type>& mat)
 }
 
 template<typename Type>
-LinAlg::Matrix<Type> LinAlg::operator~ (LinAlg::Matrix<Type>& mat)
+LinAlg::Matrix<Type> LinAlg::operator~ (LinAlg::Matrix<Type> mat)
 {
     LinAlg::Matrix<Type> temp(mat.getNumberOfColumns(), mat.getNumberOfRows());
 
